@@ -1,6 +1,6 @@
 [project]
 name = "thanakan-oauth"
-version = "0.1.0"
+version = "0.1.1"
 description = "Thai bank OAuth API clients (SCB, KBank)"
 readme = "README.md"
 authors = [
