@@ -1,13 +1,10 @@
 """Thanakan CLI - Thai bank slip QR parser"""
 
-import json
 import sys
 from pathlib import Path
 from typing import Optional
 
 import typer
-from PIL import Image
-from thanakan_qr import SlipQRData, not_bank_slip, expect_single_qrcode
 
 app = typer.Typer(
     name="thanakan",
@@ -36,6 +33,19 @@ def qr(
     ),
 ):
     """Parse QR code from slip image or raw string."""
+    try:
+        from PIL import Image
+        from thanakan_qr import SlipQRData, not_bank_slip, expect_single_qrcode
+    except ImportError as e:
+        if "zbar" in str(e).lower():
+            typer.echo("Error: Missing zbar library\n", err=True)
+            typer.echo("Install it:", err=True)
+            typer.echo("  Ubuntu/Debian: sudo apt-get install libzbar0", err=True)
+            typer.echo("  macOS: brew install zbar", err=True)
+        else:
+            typer.echo(f"Error: Missing dependency - {e}", err=True)
+        raise typer.Exit(1)
+
     if raw:
         try:
             data = SlipQRData.create_from_code(raw)
@@ -79,7 +89,7 @@ def qr(
         raise typer.Exit(1)
 
 
-def _print_next_steps(data: SlipQRData):
+def _print_next_steps(data):
     """Print next steps after successful QR parsing."""
     typer.echo("\n--- Next Steps ---", err=True)
     typer.echo("To verify this slip with bank API:", err=True)
