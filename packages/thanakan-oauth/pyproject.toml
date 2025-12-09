@@ -1,0 +1,21 @@
+[project]
+name = "thanakan-oauth"
+version = "0.1.0"
+description = "Thai bank OAuth API clients (SCB, KBank)"
+readme = "README.md"
+authors = [
+    { name = "ben", email = "me@nutchanon.org" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+    "httpx>=0.22",
+    "httpx-auth>=0.14",
+    "furl>=2.1",
+    "loguru>=0.6",
+    "pytz",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,19 @@
+[project]
+name = "thanakan-qr"
+version = "0.1.0"
+description = "Thai bank slip QR code parser"
+readme = "README.md"
+authors = [
+    { name = "ben", email = "me@nutchanon.org" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+    "crccheck>=1.0",
+    "Pillow>=10.0",
+    "pyzbar-x>=0.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
