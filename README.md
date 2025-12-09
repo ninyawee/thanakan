@@ -1,61 +1,88 @@
-# thanakan v2
+# ธนาคาร (Thanakan) v2
+
+![Thanakan Banner](docs/assets/banner.png)
 
 [![PyPI](https://img.shields.io/pypi/v/thanakan)](https://pypi.org/project/thanakan/)
 [![Sigstore](https://img.shields.io/badge/sigstore-signed-blue?logo=sigstore)](https://pypi.org/project/thanakan/#attestations)
 [![Documentation](https://img.shields.io/badge/docs-ninyawee.github.io%2Fthanakan-blue)](https://ninyawee.github.io/thanakan)
 
-Thai bank utilities - QR slip parser, bank API clients, statement parser & more.
+**เครื่องมือจัดการธนาคารไทยครบวงจร** — Thai Bank Utilities
 
 **[Documentation](https://ninyawee.github.io/thanakan)** | **[GitHub](https://github.com/ninyawee/thanakan)**
 
-## Breaking Changes in v2
+---
 
-- **Restructured as monorepo with separate sub-packages:**
-  - `thanakan-qr` - QR code parser (standalone)
-  - `thanakan-oauth` - SCB/KBank API clients (standalone)
-  - `thanakan-statement` - PDF statement parser for KBank/BBL/SCB (standalone)
-  - `thanakan-mail` - Download statements from Gmail (standalone)
-  - `thanakan-accounting` - Export to accounting software (standalone)
-- Sub-packages can be installed independently
-- Main `thanakan` package re-exports all APIs for backward compatibility
+## ✨ ใหม่: End-to-End Statement Reconciliation
 
-## Installation
+**ดาวน์โหลด Statement จาก Email → แปลงเป็น Excel → นำเข้า Peak บัญชี ในคำสั่งเดียว!**
+
+```mermaid
+flowchart LR
+    A["📧 Gmail<br/>อีเมล Statement"] --> B["📄 PDF<br/>ดาวน์โหลดอัตโนมัติ"]
+    B --> C["🔍 Parse<br/>อ่าน & รวมข้อมูล"]
+    C --> D["📊 Excel<br/>Peak Format"]
+    D --> E["✅ Peak<br/>นำเข้าบัญชี"]
+```
 
 ```bash
+# ดาวน์โหลดจาก Gmail และส่งออกเป็น Peak format (3 เดือนล่าสุด)
+thanakan accounting peak output.xlsx --since 3m
+
+# หรือใช้ไฟล์ PDF ที่มีอยู่แล้ว
+thanakan accounting peak output.xlsx ./statements/
+```
+
+**ฟีเจอร์ครบถ้วน:**
+- ✅ ดาวน์โหลด Statement อัตโนมัติจาก Gmail (KBank, BBL, SCB)
+- ✅ รองรับ PDF ที่มีรหัสผ่าน
+- ✅ รวมหลาย Statement เป็นบัญชีเดียว (deduplicate)
+- ✅ ตรวจสอบความต่อเนื่องของยอดเงิน
+- ✅ ส่งออก Peak Import Statement format
+
+---
+
+## แพ็คเกจ (Packages)
+
+ติดตั้งเฉพาะที่ต้องการ หรือติดตั้งทั้งหมดด้วย `thanakan`
+
+| แพ็คเกจ | คำอธิบาย | Install |
+|---------|----------|---------|
+| `thanakan-qr` | อ่าน QR จากสลิปโอนเงิน | `pip install thanakan-qr` |
+| `thanakan-oauth` | เชื่อมต่อ API ธนาคาร (SCB, KBank) | `pip install thanakan-oauth` |
+| `thanakan-statement` | อ่าน PDF Statement | `pip install thanakan-statement` |
+| `thanakan-mail` | ดาวน์โหลด Statement จาก Gmail | `pip install thanakan-mail` |
+| `thanakan-accounting` | ส่งออกไป Peak บัญชี | `pip install thanakan-accounting` |
+
+---
+
+## การติดตั้ง (Installation)
+
+```bash
+# ติดตั้งทุกแพ็คเกจ
 pip install thanakan
-# or
+# หรือ
 uv add thanakan
 ```
 
-### Global install
+### ติดตั้งแบบ Global
 
 ```bash
 uv tool install thanakan
-# or
-mise use -g pipx:thanakan
-# or
+# หรือ
 pipx install thanakan
 ```
 
-### Run without installing (uvx)
+### รันโดยไม่ต้องติดตั้ง (uvx)
 
 ```bash
 uvx thanakan qr slip.png
 uvx thanakan statement parse statement.pdf
 ```
 
-### Install only what you need
-```bash
-pip install thanakan-qr         # QR parsing only
-pip install thanakan-oauth      # Bank APIs only
-pip install thanakan-statement  # PDF statement parsing only
-pip install thanakan-mail       # Gmail download only
-pip install thanakan-accounting # Accounting export only
-```
-
 ### System Dependencies
 
-QR parsing requires libzbar:
+การอ่าน QR ต้องติดตั้ง libzbar:
+
 ```bash
 # Ubuntu/Debian
 sudo apt-get install libzbar0
@@ -64,48 +91,76 @@ sudo apt-get install libzbar0
 brew install zbar
 ```
 
-## CLI Usage
+---
+
+## การใช้งาน (Usage)
+
+### อ่าน QR จากสลิป
 
 ```bash
-# Parse QR from slip image
+# จากไฟล์รูป
 thanakan qr slip.png
 
-# Parse QR from stdin (text or image)
-pbpaste | thanakan qr          # macOS clipboard
-echo "00520102..." | thanakan qr
-cat slip.png | thanakan qr
+# จาก clipboard (macOS)
+pbpaste | thanakan qr
 
-# Pipe to jq (outputs compact JSON when piped)
+# Pipe กับ jq
 thanakan qr slip.png | jq .payload
+```
 
-# Parse PDF statement
+### อ่าน Statement PDF
+
+```bash
+# อ่านไฟล์เดียว
 thanakan statement parse statement.pdf
 
-# Export statements to Excel
-thanakan statement export ./pdfs/ output.xlsx --format excel
+# อ่านทั้ง directory
+thanakan statement parse ./statements/
 
-# Download statements from Gmail
-thanakan mail download kbank
-
-# Export to Peak accounting format
-thanakan accounting peak ./pdfs/ peak_import.xlsx
-
-# Show version
-thanakan version
+# ส่งออกเป็น Excel
+thanakan statement export ./statements/ output.xlsx --format excel
 ```
 
-## Python Usage
+### ดาวน์โหลดจาก Gmail
+
+```bash
+# Authenticate ครั้งแรก
+thanakan mail auth
+
+# ดาวน์โหลด Statement (30 วันล่าสุด)
+thanakan mail download kbank
+thanakan mail download bbl --output ./statements
+thanakan mail download all --since 3m
+```
+
+### ส่งออกไป Peak
+
+```bash
+# ดาวน์โหลดจาก Gmail + ส่งออก Peak
+thanakan accounting peak output.xlsx
+
+# จากไฟล์ PDF ที่มีอยู่
+thanakan accounting peak output.xlsx ./statements/
+
+# เลือกช่วงเวลา
+thanakan accounting peak output.xlsx --since 3m --until 1m
+```
+
+---
+
+## Python API
 
 ```python
-# Using main package (recommended)
+# ใช้ main package
 from thanakan import SlipQRData, SCBAPI, KBankAPI
 
-# Or import from sub-packages directly
+# หรือ import โดยตรง
 from thanakan_qr import SlipQRData
 from thanakan_oauth import SCBAPI, KBankAPI
+from thanakan_statement import parse_pdf, consolidate_by_account
 ```
 
-### Parse QR from image
+### อ่าน QR
 
 ```python
 from PIL import Image
@@ -117,14 +172,32 @@ print(data.payload.sending_bank_id)
 print(data.payload.transaction_ref_id)
 ```
 
-### Parse raw QR code
+### อ่าน Statement
 
 ```python
-from thanakan import SlipQRData
+from thanakan_statement import parse_all_pdfs, consolidate_by_account
 
-data = SlipQRData.create_from_code("00520102...")
-print(data.model_dump_json(indent=2))
+statements = parse_all_pdfs("./statements/")
+accounts = consolidate_by_account(statements, preferred_language="en")
+
+for account in accounts:
+    print(f"{account.account_number}: {len(account.all_transactions)} รายการ")
 ```
+
+---
+
+## ธนาคารที่รองรับ (Supported Banks)
+
+| ธนาคาร | QR | Statement | OAuth API | Gmail |
+|--------|:--:|:---------:|:---------:|:-----:|
+| KBank (กสิกร) | ✅ | ✅ | ✅ | ✅ |
+| SCB (ไทยพาณิชย์) | ✅ | ✅ | ✅ | ✅ |
+| BBL (กรุงเทพ) | ✅ | ✅ | — | ✅ |
+| KTB (กรุงไทย) | ✅ | — | — | — |
+| TTB (ทหารไทยธนชาต) | ✅ | — | — | — |
+| BAY (กรุงศรี) | ✅ | — | — | — |
+
+---
 
 ## Credits
 

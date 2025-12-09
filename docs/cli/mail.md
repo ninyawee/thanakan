@@ -134,7 +134,7 @@ export GMAIL_CLIENT_SECRET=/path/to/client_secret.json
 export GMAIL_TOKEN_PATH=~/.thanakan/gmail_token.json
 
 # รหัสผ่าน PDF (optional)
-export PDF_PASS=DDMMYYYY
+export PDF_PASS=DDMMYYYY  # your birthdate
 ```
 
 ### 3. ยืนยันตัวตน

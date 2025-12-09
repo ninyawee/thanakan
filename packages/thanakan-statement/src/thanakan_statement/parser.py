@@ -18,8 +18,8 @@ from .keywords import (
     get_withdrawal_keywords,
 )
 
-# Default PDF password (from environment or fallback)
-DEFAULT_PASSWORD = os.environ.get("PDF_PASS", "DDMMYYYY")
+# Default PDF password from environment
+DEFAULT_PASSWORD = os.environ.get("PDF_PASS")
 
 # Bank type constants
 BANK_KBANK = "kbank"

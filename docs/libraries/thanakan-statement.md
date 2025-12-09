@@ -44,7 +44,7 @@ statement = parse_pdf(
 | Parameter | Type | Default | คำอธิบาย |
 |-----------|------|---------|----------|
 | `pdf_path` | `str \| Path` | - | Path ไปยัง PDF file |
-| `password` | `str` | env `PDF_PASS` หรือ `DDMMYYYY` | รหัสผ่าน PDF |
+| `password` | `str` | env `PDF_PASS` | รหัสผ่าน PDF |
 
 **Returns:** `Statement`
 

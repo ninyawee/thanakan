@@ -58,7 +58,7 @@ Key exports: `Transaction`, `Statement`, `Account`, `parse_pdf`, `parse_all_pdfs
 - `parse_pdf(pdf_path, password)` - Parse a single PDF, returns `Statement`
 - `parse_all_pdfs(directory, password)` - Parse all PDFs in a directory, returns `list[Statement]`
 - Auto-detects bank type (KBank vs BBL) and language (Thai vs English)
-- Default PDF password from `PDF_PASS` env var or `"DDMMYYYY"`
+- Default PDF password from `PDF_PASS` env var
 
 **Consolidation**:
 - `consolidate_by_account(statements, preferred_language)` - Groups by account, deduplicates transactions, returns `list[Account]`

@@ -41,7 +41,7 @@ def parse(
         None,
         "--password",
         "-p",
-        help="PDF password (default: env PDF_PASS or 'DDMMYYYY')",
+        help="PDF password (default: env PDF_PASS)",
         envvar="PDF_PASS",
     ),
     verbose: bool = typer.Option(
@@ -63,7 +63,7 @@ def parse(
         typer.echo("Install with: uv sync", err=True)
         raise typer.Exit(1)
 
-    pwd = password or "DDMMYYYY"
+    pwd = password
 
     try:
         if path.is_file():
@@ -114,7 +114,7 @@ def export_cmd(
         None,
         "--password",
         "-p",
-        help="PDF password (default: env PDF_PASS or 'DDMMYYYY')",
+        help="PDF password (default: env PDF_PASS)",
         envvar="PDF_PASS",
     ),
     language: Language = typer.Option(
@@ -148,7 +148,7 @@ def export_cmd(
         typer.echo(f"Error: Missing dependency - {e}", err=True)
         raise typer.Exit(1)
 
-    pwd = password or "DDMMYYYY"
+    pwd = password
 
     # Parse PDFs
     try:
@@ -205,7 +205,7 @@ def validate(
         None,
         "--password",
         "-p",
-        help="PDF password (default: env PDF_PASS or 'DDMMYYYY')",
+        help="PDF password (default: env PDF_PASS)",
         envvar="PDF_PASS",
     ),
 ):
@@ -221,7 +221,7 @@ def validate(
         typer.echo(f"Error: Missing dependency - {e}", err=True)
         raise typer.Exit(1)
 
-    pwd = password or "DDMMYYYY"
+    pwd = password
 
     # Parse PDFs
     try:

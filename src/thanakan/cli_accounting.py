@@ -64,7 +64,7 @@ def peak(
         None,
         "--password",
         "-p",
-        help="PDF password (default: env PDF_PASS or 'DDMMYYYY')",
+        help="PDF password (default: env PDF_PASS)",
         envvar="PDF_PASS",
     ),
     language: Language = typer.Option(
@@ -113,7 +113,7 @@ def peak(
         typer.echo("Install with: uv sync", err=True)
         raise typer.Exit(1)
 
-    pwd = password or "DDMMYYYY"
+    pwd = password
 
     # Determine source: local path or email download
     if path is not None:

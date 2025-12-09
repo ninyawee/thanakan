@@ -40,7 +40,7 @@ thanakan statement parse [OPTIONS] PATH
 
 | Option | Short | คำอธิบาย |
 |--------|-------|----------|
-| `--password` | `-p` | รหัสผ่าน PDF (default: env `PDF_PASS` หรือ `DDMMYYYY`) |
+| `--password` | `-p` | รหัสผ่าน PDF (default: env `PDF_PASS`) |
 | `--verbose` | `-v` | แสดงรายละเอียดการ parse |
 
 ### ตัวอย่าง
@@ -159,5 +159,4 @@ thanakan statement validate ./statements/
 ## หมายเหตุ
 
 - Statement PDF ส่วนใหญ่มีรหัสผ่านเป็นวันเดือนปีเกิด (DDMMYYYY)
-- Default password คือ `DDMMYYYY`
 - สามารถตั้งค่า environment variable `PDF_PASS` แทนการระบุทุกครั้ง
