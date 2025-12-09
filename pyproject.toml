@@ -1,7 +1,7 @@
 [project]
 name = "thanakan"
-version = "0.1.0"
-description = "Thai bank utilities monorepo"
+version = "2.0.0"
+description = "Thai bank utilities - QR slip parser & bank API clients"
 readme = "README.md"
 authors = [
     { name = "ben", email = "me@nutchanon.org" }
@@ -10,7 +10,15 @@ requires-python = ">=3.10"
 dependencies = [
     "thanakan-qr",
     "thanakan-oauth",
+    "typer>=0.9",
 ]
+
+[project.scripts]
+thanakan = "thanakan.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.uv.workspace]
 members = ["packages/*"]
