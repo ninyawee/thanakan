@@ -199,10 +199,12 @@ for account in accounts:
 
 ---
 
-## Credits
+## ☕ สนับสนุน (Support)
 
-This project is a work of [SAA-Coop](https://github.com/SAA-Coop).
+หากโปรเจคนี้มีประโยชน์ สามารถสนับสนุนได้ที่:
 
-## License
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Support%20me%20☕-ff5f5f?logo=ko-fi&logoColor=white)](https://ko-fi.com/ninyawee)
+
+## 📄 License
 
 MIT
