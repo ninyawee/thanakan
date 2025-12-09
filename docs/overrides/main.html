@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 
+{% block extrahead %}
+  <meta property="og:title" content="{{ page.title }} - Thanakan" />
+  <meta property="og:description" content="เครื่องมือจัดการธนาคารไทยครบวงจร - Thai Bank Utilities" />
+  <meta property="og:image" content="https://raw.githubusercontent.com/ninyawee/thanakan/main/docs/assets/og-image.jpg" />
+  <meta property="og:url" content="{{ page.canonical_url }}" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{{ page.title }} - Thanakan" />
+  <meta name="twitter:description" content="เครื่องมือจัดการธนาคารไทยครบวงจร - Thai Bank Utilities" />
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/ninyawee/thanakan/main/docs/assets/og-image.jpg" />
+{% endblock %}
+
 {% block content %}
   {{ super() }}
 
