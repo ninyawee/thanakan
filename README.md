@@ -1,5 +1,7 @@
 # thanakan v2
 
+[![PyPI](https://img.shields.io/pypi/v/thanakan)](https://pypi.org/project/thanakan/)
+[![Sigstore](https://img.shields.io/badge/sigstore-signed-blue?logo=sigstore)](https://pypi.org/project/thanakan/#attestations)
 [![Documentation](https://img.shields.io/badge/docs-ninyawee.github.io%2Fthanakan-blue)](https://ninyawee.github.io/thanakan)
 
 Thai bank utilities - QR slip parser, bank API clients, statement parser & more.
