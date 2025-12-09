@@ -1,5 +1,5 @@
 import pytest
-from thanakan.services.kbank import KBankAPI
+from thanakan import KBankAPI
 
 
 @pytest.mark.asyncio

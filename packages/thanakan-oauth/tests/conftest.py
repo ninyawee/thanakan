@@ -3,11 +3,45 @@ import tempfile
 from pathlib import Path
 
 import pytest
-from google.cloud import secretmanager_v1
+
+try:
+    from google.cloud import secretmanager_v1
+except ImportError:
+    secretmanager_v1 = None
+
+from thanakan import SCBAPI, SCBBaseURL
+
+
+# SCB fixtures
+@pytest.fixture
+def api_key():
+    key = os.getenv("SCB_UAT_API_KEY")
+    if not key:
+        pytest.skip("SCB_UAT_API_KEY not set")
+    return key
 
 
 @pytest.fixture
+def api_secret():
+    secret = os.getenv("SCB_UAT_API_SECRET")
+    if not secret:
+        pytest.skip("SCB_UAT_API_SECRET not set")
+    return secret
+
+
+@pytest.fixture
+def scb_api(api_key, api_secret):
+    s = SCBAPI(
+        api_key=api_key, api_secret=api_secret, base_url=SCBBaseURL.uat.value
+    )
+    return s
+
+
+# KBank fixtures
+@pytest.fixture
 def cert():
+    if secretmanager_v1 is None:
+        pytest.skip("google-cloud-secret-manager not installed")
     client = secretmanager_v1.SecretManagerServiceClient()
 
     with tempfile.NamedTemporaryFile(

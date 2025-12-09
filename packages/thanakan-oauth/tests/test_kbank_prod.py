@@ -3,8 +3,7 @@ from pathlib import Path
 
 import pytest
 from PIL import Image
-from thanakan import SlipQRData
-from thanakan.services.kbank import KBankAPI
+from thanakan import SlipQRData, KBankAPI
 
 
 @pytest.mark.xfail

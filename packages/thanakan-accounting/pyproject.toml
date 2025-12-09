@@ -1,0 +1,17 @@
+[project]
+name = "thanakan-accounting"
+version = "0.1.0"
+description = "Export Thai bank statements to accounting software formats (Peak, etc.)"
+readme = "README.md"
+authors = [
+    { name = "ben", email = "me@nutchanon.org" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "thanakan-statement",
+    "openpyxl>=3.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

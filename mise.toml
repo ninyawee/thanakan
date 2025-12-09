@@ -1,2 +1,59 @@
 [tools]
 python = "3.14.2"
+
+[tasks.pypi]
+description = "Publish all packages to PyPI"
+depends = ["pypi:libs", "pypi:main"]
+
+[tasks."pypi:libs"]
+description = "Build and publish all workspace packages to PyPI"
+run = """
+#!/usr/bin/env bash
+set -e
+
+PUBLISH_URL=""
+if [[ "${test:-}" == "true" ]]; then
+  PUBLISH_URL="--publish-url https://test.pypi.org/legacy/"
+  echo "🧪 Publishing to TestPyPI..."
+fi
+
+packages=(
+  "packages/thanakan-qr"
+  "packages/thanakan-oauth"
+  "packages/thanakan-statement"
+  "packages/thanakan-mail"
+  "packages/thanakan-accounting"
+)
+
+for pkg in "${packages[@]}"; do
+  echo "📦 Publishing $pkg..."
+  cd "$MISE_PROJECT_ROOT/$pkg"
+  rm -rf dist/
+  uv build
+  uv publish $PUBLISH_URL
+  cd "$MISE_PROJECT_ROOT"
+done
+
+echo "✅ All workspace packages published!"
+"""
+
+[tasks."pypi:main"]
+description = "Build and publish main thanakan package to PyPI"
+run = """
+#!/usr/bin/env bash
+set -e
+
+PUBLISH_URL=""
+if [[ "${test:-}" == "true" ]]; then
+  PUBLISH_URL="--publish-url https://test.pypi.org/legacy/"
+  echo "🧪 Publishing to TestPyPI..."
+fi
+
+echo "📦 Publishing thanakan (main package)..."
+cd "$MISE_PROJECT_ROOT"
+rm -rf dist/
+uv build
+uv publish $PUBLISH_URL
+
+echo "✅ Main package published!"
+"""

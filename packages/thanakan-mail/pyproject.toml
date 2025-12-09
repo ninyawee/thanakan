@@ -1,0 +1,20 @@
+[project]
+name = "thanakan-mail"
+version = "0.1.0"
+description = "Download Thai bank PDF statements from email (Gmail)"
+readme = "README.md"
+authors = [
+    { name = "ben", email = "me@nutchanon.org" }
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0",
+    "google-auth>=2.0",
+    "google-auth-oauthlib>=1.0",
+    "google-api-python-client>=2.0",
+    "pikepdf>=8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

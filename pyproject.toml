@@ -10,7 +10,11 @@ requires-python = ">=3.10"
 dependencies = [
     "thanakan-qr",
     "thanakan-oauth",
+    "thanakan-statement",
+    "thanakan-mail",
+    "thanakan-accounting",
     "typer>=0.9",
+    "questionary>=2.0",
 ]
 
 [project.scripts]
@@ -26,9 +30,16 @@ members = ["packages/*"]
 [tool.uv.sources]
 thanakan-qr = { workspace = true }
 thanakan-oauth = { workspace = true }
+thanakan-statement = { workspace = true }
+thanakan-mail = { workspace = true }
+thanakan-accounting = { workspace = true }
 
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
+]
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.5",
 ]

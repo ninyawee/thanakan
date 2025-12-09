@@ -1,0 +1,73 @@
+site_name: Thanakan
+site_description: Thai bank utilities - QR slip parser, bank API clients, statement parser
+site_url: https://ninyawee.github.io/thanakan
+repo_url: https://github.com/ninyawee/thanakan
+repo_name: ninyawee/thanakan
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  language: th
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ninyawee/thanakan
+
+nav:
+  - หน้าแรก: index.md
+  - เริ่มต้นใช้งาน: getting-started.md
+  - CLI:
+    - cli/index.md
+    - คำสั่ง qr: cli/qr.md
+    - คำสั่ง statement: cli/statement.md
+    - คำสั่ง mail: cli/mail.md
+    - คำสั่ง accounting: cli/accounting.md
+  - Libraries:
+    - libraries/index.md
+    - thanakan-qr: libraries/thanakan-qr.md
+    - thanakan-oauth: libraries/thanakan-oauth.md
+    - thanakan-statement: libraries/thanakan-statement.md
+    - thanakan-mail: libraries/thanakan-mail.md
+    - thanakan-accounting: libraries/thanakan-accounting.md

@@ -1,12 +1,19 @@
 # thanakan v2
 
-Thai bank utilities - QR slip parser & bank API clients.
+[![Documentation](https://img.shields.io/badge/docs-ninyawee.github.io%2Fthanakan-blue)](https://ninyawee.github.io/thanakan)
+
+Thai bank utilities - QR slip parser, bank API clients, statement parser & more.
+
+**[Documentation](https://ninyawee.github.io/thanakan)** | **[GitHub](https://github.com/ninyawee/thanakan)**
 
 ## Breaking Changes in v2
 
 - **Restructured as monorepo with separate sub-packages:**
   - `thanakan-qr` - QR code parser (standalone)
   - `thanakan-oauth` - SCB/KBank API clients (standalone)
+  - `thanakan-statement` - PDF statement parser for KBank/BBL/SCB (standalone)
+  - `thanakan-mail` - Download statements from Gmail (standalone)
+  - `thanakan-accounting` - Export to accounting software (standalone)
 - Sub-packages can be installed independently
 - Main `thanakan` package re-exports all APIs for backward compatibility
 
@@ -18,10 +25,30 @@ pip install thanakan
 uv add thanakan
 ```
 
-Install only what you need:
+### Global install
+
 ```bash
-pip install thanakan-qr      # QR parsing only
-pip install thanakan-oauth   # Bank APIs only
+uv tool install thanakan
+# or
+mise use -g pipx:thanakan
+# or
+pipx install thanakan
+```
+
+### Run without installing (uvx)
+
+```bash
+uvx thanakan qr slip.png
+uvx thanakan statement parse statement.pdf
+```
+
+### Install only what you need
+```bash
+pip install thanakan-qr         # QR parsing only
+pip install thanakan-oauth      # Bank APIs only
+pip install thanakan-statement  # PDF statement parsing only
+pip install thanakan-mail       # Gmail download only
+pip install thanakan-accounting # Accounting export only
 ```
 
 ### System Dependencies
@@ -41,8 +68,25 @@ brew install zbar
 # Parse QR from slip image
 thanakan qr slip.png
 
-# Parse raw QR code string
-thanakan qr --raw "00520102..."
+# Parse QR from stdin (text or image)
+pbpaste | thanakan qr          # macOS clipboard
+echo "00520102..." | thanakan qr
+cat slip.png | thanakan qr
+
+# Pipe to jq (outputs compact JSON when piped)
+thanakan qr slip.png | jq .payload
+
+# Parse PDF statement
+thanakan statement parse statement.pdf
+
+# Export statements to Excel
+thanakan statement export ./pdfs/ output.xlsx --format excel
+
+# Download statements from Gmail
+thanakan mail download kbank
+
+# Export to Peak accounting format
+thanakan accounting peak ./pdfs/ peak_import.xlsx
 
 # Show version
 thanakan version
@@ -79,6 +123,10 @@ from thanakan import SlipQRData
 data = SlipQRData.create_from_code("00520102...")
 print(data.model_dump_json(indent=2))
 ```
+
+## Credits
+
+This project is a work of [SAA-Coop](https://github.com/SAA-Coop).
 
 ## License
 

@@ -22,7 +22,7 @@ uv run pytest tests/test_qr_data.py::test_function_name
 
 ## Architecture
 
-**thanakan** is a Thai bank utilities monorepo with two workspace packages:
+**thanakan** is a Thai bank utilities monorepo with three workspace packages:
 
 ### thanakan-qr (`packages/thanakan-qr`)
 Parses Thai bank slip mini QR codes following the SCB specification. Extracts transaction reference ID and sending bank ID from QR data on payment slips.
@@ -48,6 +48,41 @@ Both bank clients use custom OAuth2 implementations extending `httpx-auth` becau
 - Slip verification (`verify_slip`, `verify_slip_sync`)
 
 Both APIs require mTLS certificates for production use.
+
+### thanakan-statement (`packages/thanakan-statement`)
+Parses Thai bank PDF statements (KBank, BBL) and extracts transaction data. Supports password-protected PDFs, bilingual statements (Thai/English), and consolidation of multiple statements.
+
+Key exports: `Transaction`, `Statement`, `Account`, `parse_pdf`, `parse_all_pdfs`, `consolidate_by_account`, `export_to_json`, `export_to_csv`, `export_to_excel`
+
+**Parsing**:
+- `parse_pdf(pdf_path, password)` - Parse a single PDF, returns `Statement`
+- `parse_all_pdfs(directory, password)` - Parse all PDFs in a directory, returns `list[Statement]`
+- Auto-detects bank type (KBank vs BBL) and language (Thai vs English)
+- Default PDF password from `PDF_PASS` env var or `"DDMMYYYY"`
+
+**Consolidation**:
+- `consolidate_by_account(statements, preferred_language)` - Groups by account, deduplicates transactions, returns `list[Account]`
+- `validate_balance_continuity(statements)` - Validates balance flow between statements
+
+**Export**:
+- `export_to_json(accounts, path)` - Full structured JSON
+- `export_to_csv(accounts, directory)` - One CSV per account
+- `export_to_excel(accounts, path)` - One sheet per account
+
+### CLI (`src/thanakan/cli*.py`)
+Command-line interface built with Typer. Entry point is `thanakan`.
+
+**Commands:**
+- `thanakan qr` - Parse QR from image, raw string, or stdin
+- `thanakan statement parse` - Parse PDF statements to JSON
+- `thanakan statement export` - Parse and export to JSON/CSV/Excel
+- `thanakan mail download` - Download statements from Gmail
+- `thanakan accounting peak` - Export to Peak accounting format
+
+**Pipe-friendly design (qr command):**
+- Reads from stdin when piped (auto-detects text vs image via magic bytes)
+- Outputs compact JSON when piped, pretty JSON in terminal
+- Example: `echo "QR_DATA" | thanakan qr | jq .payload`
 
 ### Models
 Pydantic models use camelCase aliasing (`APIModel` base class) to match bank API JSON conventions. `SlipData` is the common response structure for slip verification across both banks.
