@@ -1,5 +1,6 @@
 """Tests for mail CLI commands."""
 
+import re
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
@@ -11,6 +12,11 @@ from thanakan.cli import app
 
 
 runner = CliRunner()
+
+
+def strip_ansi(text: str) -> str:
+    """Strip ANSI escape codes from text."""
+    return re.sub(r"\x1b\[[0-9;]*m", "", text)
 
 
 # =============================================================================
@@ -292,8 +298,9 @@ class TestDownloadPasswordHandling:
         )
 
         assert result.exit_code == 0
-        assert "--password" in result.stdout
-        assert "--remember" in result.stdout
+        output = strip_ansi(result.stdout)
+        assert "--password" in output
+        assert "--remember" in output
 
     def test_download_remember_defaults_to_keyring(self):
         """Should default --remember to keyring."""
@@ -304,4 +311,4 @@ class TestDownloadPasswordHandling:
 
         assert result.exit_code == 0
         # Help text should mention keyring as default
-        assert "keyring" in result.stdout
+        assert "keyring" in strip_ansi(result.stdout)
