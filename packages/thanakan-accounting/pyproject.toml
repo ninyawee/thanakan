@@ -1,6 +1,6 @@
 [project]
 name = "thanakan-accounting"
-version = "0.1.1"
+version = "0.2.0"
 description = "Export Thai bank statements to accounting software formats (Peak, etc.)"
 readme = "README.md"
 authors = [

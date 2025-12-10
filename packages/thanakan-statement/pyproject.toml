@@ -1,6 +1,6 @@
 [project]
 name = "thanakan-statement"
-version = "0.1.1"
+version = "0.2.0"
 description = "Thai bank PDF statement parser (KBank, BBL, SCB)"
 readme = "README.md"
 authors = [

@@ -1,6 +1,6 @@
 [project]
 name = "thanakan"
-version = "2.0.1"
+version = "2.1.0"
 description = "Thai bank utilities - QR slip parser & bank API clients"
 readme = "README.md"
 authors = [
