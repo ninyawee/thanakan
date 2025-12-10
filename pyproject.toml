@@ -7,7 +7,7 @@ authors = [
     { name = "ben", email = "me@nutchanon.org" }
 ]
 requires-python = ">=3.10"
-license = "Sustainable Use License"
+license = {text = "Sustainable Use License"}
 license-files = ["LICENSE.md", "LICENSE_EE.md"]
 dependencies = [
     "thanakan-qr",
