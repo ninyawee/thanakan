@@ -207,4 +207,10 @@ for account in accounts:
 
 ## 📄 License
 
-MIT
+Thanakan is [fair-code](https://faircode.io) distributed under the [Sustainable Use License](LICENSE.md) and [Thanakan Enterprise License](LICENSE_EE.md).
+
+- **Source Available**: Always visible source code
+- **Self-Hostable**: Deploy anywhere
+- **Extensible**: Add your own functionality
+
+Enterprise licenses available for additional features and support.

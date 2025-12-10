@@ -1,12 +1,13 @@
 [project]
 name = "thanakan-statement"
 version = "0.1.1"
-description = "Thai bank PDF statement parser (KBank, BBL)"
+description = "Thai bank PDF statement parser (KBank, BBL, SCB)"
 readme = "README.md"
 authors = [
     { name = "ben", email = "me@nutchanon.org" }
 ]
 requires-python = ">=3.10"
+license = "Sustainable Use License"
 dependencies = [
     "pydantic>=2.0",
     "pikepdf>=8.0",

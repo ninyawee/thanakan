@@ -29,7 +29,7 @@ for pkg in "${packages[@]}"; do
   echo "📦 Publishing $pkg..."
   cd "$MISE_PROJECT_ROOT/$pkg"
   rm -rf dist/
-  uv build
+  uv build --out-dir dist/
   uv publish $PUBLISH_URL
   cd "$MISE_PROJECT_ROOT"
 done
