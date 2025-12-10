@@ -1,5 +1,4 @@
 import pytest
-from thanakan import SCBAPI, SCBBaseURL
 
 
 @pytest.mark.asyncio

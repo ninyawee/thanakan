@@ -1,7 +1,5 @@
 """Tests for PDF unlock functionality."""
 
-import os
-from pathlib import Path
 from unittest.mock import patch, MagicMock
 
 import pytest
@@ -14,8 +12,6 @@ from thanakan_mail.unlock import (
     unlock_pdf,
     unlock_pdfs,
     is_pdf_encrypted,
-    CONFIG_DIR,
-    PASSWORD_FILE,
     KEYRING_SERVICE,
     KEYRING_USERNAME,
 )

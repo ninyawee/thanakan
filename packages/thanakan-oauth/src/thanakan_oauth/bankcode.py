@@ -1,6 +1,5 @@
 from enum import Enum
 
-from pydantic.types import constr
 from pydantic import StringConstraints
 from typing_extensions import Annotated
 

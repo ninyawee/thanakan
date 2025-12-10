@@ -176,9 +176,9 @@ def version():
     typer.echo(f"thanakan {__version__}")
 
 
-# Register subcommand groups
-from thanakan.cli_statement import statement_app
-from thanakan.cli_mail import mail_app
+# Register subcommand groups (imported at module level for typer registration)
+from thanakan.cli_statement import statement_app  # noqa: E402
+from thanakan.cli_mail import mail_app  # noqa: E402
 
 app.add_typer(statement_app, name="statement")
 app.add_typer(statement_app, name="stm", hidden=True)

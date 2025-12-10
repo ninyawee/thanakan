@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from crccheck.crc import Crc16CcittFalse
-from PIL import Image
+from PIL.Image import Image
 from pydantic import BaseModel
 from pyzbar.pyzbar import Decoded, decode
 from pyzbar.wrapper import ZBarSymbol
@@ -48,12 +48,9 @@ class CodeSection:
         return self.code[4 : 4 + self.length]
 
     @property
-    def rest(self):
+    def rest(self) -> str | None:
         r = self.code[4 + self.length :]
-        if r:
-            return r
-        else:
-            return None
+        return r if r else None
 
 
 class QrPayload(BaseModel):
@@ -67,17 +64,21 @@ class QrPayload(BaseModel):
         if not api_id.tag_type == SubTag.api_id:
             raise not_bank_slip("invalid `api id` code section")
 
+        if api_id.rest is None:
+            raise not_bank_slip("missing `sending bank id` code section")
         sending_bank_id = CodeSection(api_id.rest, is_under_payload=True)
         if not sending_bank_id.tag_type == SubTag.sending_bank_id:
             raise not_bank_slip("invalid `sending bank id` code section")
 
+        if sending_bank_id.rest is None:
+            raise not_bank_slip("missing `transaction ref id` code section")
         transaction_ref_id = CodeSection(
             sending_bank_id.rest, is_under_payload=True
         )
         if not transaction_ref_id.tag_type == SubTag.transaction_ref_id:
             raise not_bank_slip("invalid `transaction ref id` code section")
 
-        if not transaction_ref_id.rest is None:
+        if transaction_ref_id.rest is not None:
             raise not_bank_slip("unexpected extend code section")
 
         return cls(
@@ -108,16 +109,20 @@ class SlipQRData(BaseModel):
         if not payload.tag_type == Tag.payload:
             raise not_bank_slip("invalid `payload` code section")
 
+        if payload.rest is None:
+            raise not_bank_slip("missing `country code` code section")
         country_code = CodeSection(code=payload.rest)
         if not country_code.tag_type == Tag.country_code:
             raise not_bank_slip("invalid `country code` code section")
 
+        if country_code.rest is None:
+            raise not_bank_slip("missing `crc` code section")
         crc = CodeSection(code=country_code.rest)
 
         if not crc.tag_type == Tag.crc:
             raise not_bank_slip("invalid `crc` code section")
 
-        if not crc.rest is None:
+        if crc.rest is not None:
             raise not_bank_slip("unexpected extend code section")
 
         data_part = code[: -crc.length]

@@ -106,8 +106,8 @@ def peak(
         thanakan acc peak output.xlsx ./statements/
     """
     try:
-        from thanakan_statement import consolidate_by_account, parse_all_pdfs, parse_pdf
-        from thanakan_accounting import export_to_peak
+        from thanakan_statement import consolidate_by_account
+        import thanakan_accounting  # noqa: F401
     except ImportError as e:
         typer.echo(f"Error: Missing dependency - {e}", err=True)
         typer.echo("Install with: uv sync", err=True)

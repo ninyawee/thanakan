@@ -1647,7 +1647,7 @@ wheels = [
 
 [[package]]
 name = "thanakan"
-version = "2.0.0"
+version = "2.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "questionary" },
@@ -1692,7 +1692,7 @@ docs = [
 
 [[package]]
 name = "thanakan-accounting"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/thanakan-accounting" }
 dependencies = [
     { name = "openpyxl" },
@@ -1707,7 +1707,7 @@ requires-dist = [
 
 [[package]]
 name = "thanakan-mail"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/thanakan-mail" }
 dependencies = [
     { name = "google-api-python-client" },
@@ -1728,7 +1728,7 @@ requires-dist = [
 
 [[package]]
 name = "thanakan-oauth"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/thanakan-oauth" }
 dependencies = [
     { name = "furl" },
@@ -1751,7 +1751,7 @@ requires-dist = [
 
 [[package]]
 name = "thanakan-qr"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/thanakan-qr" }
 dependencies = [
     { name = "crccheck" },
@@ -1770,7 +1770,7 @@ requires-dist = [
 
 [[package]]
 name = "thanakan-statement"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/thanakan-statement" }
 dependencies = [
     { name = "openpyxl" },
