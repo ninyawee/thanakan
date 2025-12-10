@@ -46,7 +46,7 @@ jobs:
       - name: Collect all dists
         run: |
           mkdir -p all-dist
-          cp packages/*/dist/* all-dist/
+          cp packages/thanakan-*/dist/* all-dist/
           cp dist/* all-dist/
 
       - name: Upload artifacts
