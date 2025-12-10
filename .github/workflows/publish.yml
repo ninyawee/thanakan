@@ -35,9 +35,7 @@ jobs:
         run: |
           for pkg in packages/thanakan-*; do
             echo "📦 Building $pkg..."
-            cd "$pkg"
-            uv build
-            cd "$GITHUB_WORKSPACE"
+            uv build --package "$(basename "$pkg" | tr '-' '_')" --out-dir "$pkg/dist"
           done
 
       - name: Build main package
