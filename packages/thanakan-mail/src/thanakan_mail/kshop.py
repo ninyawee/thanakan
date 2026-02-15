@@ -142,7 +142,7 @@ class KShopFetcher:
             query += f" older_than:{until}"
 
         if verbose:
-            print(f"Searching for KShop emails...")
+            print("Searching for KShop emails...")
 
         messages = self.provider.search_messages(query, max_results=max_emails)
 
@@ -214,5 +214,5 @@ def save_kshop_json(
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     data = [s.model_dump(mode="json") for s in summaries]
-    with open(output_path, "w") as f:
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, default=str, ensure_ascii=False)
