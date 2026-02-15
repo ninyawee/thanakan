@@ -31,6 +31,15 @@ from .unlock import (
     save_password,
     clear_saved_password,
 )
+from .kshop import (
+    KShopSummary,
+    KShopFetcher,
+    KShopParseError,
+    parse_kshop_email,
+    fetch_kshop_summaries,
+    save_kshop_json,
+    KSHOP_SENDER,
+)
 
 __all__ = [
     "EmailAttachment",
@@ -54,4 +63,11 @@ __all__ = [
     "get_saved_password",
     "save_password",
     "clear_saved_password",
+    "KShopSummary",
+    "KShopFetcher",
+    "KShopParseError",
+    "parse_kshop_email",
+    "fetch_kshop_summaries",
+    "save_kshop_json",
+    "KSHOP_SENDER",
 ]
