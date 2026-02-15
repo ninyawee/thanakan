@@ -1,6 +1,7 @@
 """Thanakan CLI - Thai bank PDF statement parser commands"""
 
 import json
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import Optional
@@ -266,6 +267,162 @@ def validate(
 
     if not all_valid:
         raise typer.Exit(1)
+
+
+@statement_app.command()
+def kshop(
+    since: str = typer.Option(
+        "30d",
+        "--since",
+        "-s",
+        help="Fetch emails from this duration ago (e.g., 30d, 2w, 3m, 1y)",
+    ),
+    until: Optional[str] = typer.Option(
+        None,
+        "--until",
+        "-u",
+        help="Fetch emails until this duration ago (e.g., 7d, 1w)",
+    ),
+    max_emails: int = typer.Option(
+        100,
+        "--max",
+        "-m",
+        help="Maximum emails to process",
+    ),
+    output: Optional[Path] = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Output JSON file (default: stdout)",
+    ),
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Show verbose output",
+    ),
+):
+    """Fetch and parse KShop (K PLUS SHOP) daily summary emails from Gmail.
+
+    Reads KShop daily sales summary emails and extracts store name,
+    store ID, daily amount, and bank account number.
+
+    Requires Gmail authentication (run 'thanakan mail auth' first).
+
+    Examples:
+
+        thanakan stm kshop
+
+        thanakan stm kshop --since 60d --output kshop.json
+
+        thanakan stm kshop --since 3m -v
+    """
+    try:
+        from thanakan_mail import fetch_kshop_summaries, save_kshop_json
+    except ImportError as e:
+        typer.echo(f"Error: Missing dependency - {e}", err=True)
+        typer.echo("Install with: uv sync", err=True)
+        raise typer.Exit(1)
+
+    try:
+        summaries = fetch_kshop_summaries(
+            max_emails=max_emails,
+            since=since,
+            until=until,
+            verbose=verbose,
+        )
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        typer.echo("\nRun 'thanakan mail auth' first", err=True)
+        raise typer.Exit(1)
+    except Exception as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+    if not summaries:
+        typer.echo("No KShop emails found", err=True)
+        raise typer.Exit(1)
+
+    if output:
+        save_kshop_json(summaries, output)
+        typer.echo(f"Exported {len(summaries)} summaries to {output}", err=True)
+
+    # When piped, output JSON for machine consumption
+    if not sys.stdout.isatty():
+        data = [s.model_dump(mode="json") for s in summaries]
+        print(json.dumps(data, default=str, ensure_ascii=False))
+        return
+
+    # Display tables grouped by store
+    from collections import defaultdict
+    from decimal import Decimal
+    from email.utils import parsedate_to_datetime
+
+    from rich.console import Console
+    from rich.panel import Panel
+    from rich.table import Table
+
+    console = Console()
+
+    # Group by store_id
+    by_store: dict[str, list] = defaultdict(list)
+    for s in summaries:
+        by_store[s.store_id].append(s)
+
+    def _parse_date(email_date: str) -> str:
+        try:
+            return parsedate_to_datetime(email_date).strftime("%Y-%m-%d")
+        except Exception:
+            return email_date
+
+    grand_total = Decimal(0)
+    grand_days = 0
+
+    for store_id, store_summaries in sorted(by_store.items()):
+        store_name = store_summaries[0].store_name
+        account = store_summaries[0].account_number
+        account_name = store_summaries[0].account_name
+
+        # Sort by date descending (newest first)
+        store_summaries.sort(
+            key=lambda s: _parse_date(s.email_date), reverse=True
+        )
+
+        store_total = sum(s.daily_amount for s in store_summaries)
+        grand_total += store_total
+        grand_days += len(store_summaries)
+
+        # Store header
+        header = f"{store_name}  [dim]{store_id}[/dim]"
+        if account_name:
+            header += f"\n{account}  {account_name}"
+        else:
+            header += f"\n{account}"
+
+        # Date-Amount table
+        table = Table(
+            show_header=True,
+            title=header,
+            title_style="bold green",
+            title_justify="left",
+        )
+        table.add_column("Date", style="cyan")
+        table.add_column("Amount (THB)", justify="right", style="bold")
+
+        for s in store_summaries:
+            table.add_row(_parse_date(s.email_date), f"{s.daily_amount:,.2f}")
+
+        table.add_section()
+        table.add_row(f"{len(store_summaries)} days", f"{store_total:,.2f}")
+
+        console.print(table)
+        console.print()
+
+    # Grand total across all stores
+    if len(by_store) > 1:
+        console.print(
+            f"[bold]Total: {grand_days} days, {grand_total:,.2f} THB[/bold]"
+        )
 
 
 def _print_parse_summary(statements):

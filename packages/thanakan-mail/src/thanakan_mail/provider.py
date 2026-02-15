@@ -190,8 +190,10 @@ class GmailProvider:
         sender = self._get_header(headers, "From")
         date = self._get_header(headers, "Date")
 
-        # Extract attachments
-        attachments = self._extract_attachments(msg.get("payload", {}))
+        # Extract attachments and body
+        payload = msg.get("payload", {})
+        attachments = self._extract_attachments(payload)
+        body = self._extract_body_text(payload)
 
         return EmailMessage(
             message_id=message_id,
@@ -199,6 +201,7 @@ class GmailProvider:
             subject=subject,
             sender=sender,
             date=date,
+            body=body,
             attachments=attachments,
         )
 
@@ -232,6 +235,34 @@ class GmailProvider:
         for header in headers:
             if header["name"].lower() == name.lower():
                 return header["value"]
+        return ""
+
+    def _extract_body_text(self, payload: dict) -> str:
+        """Extract plain text body from email payload."""
+        # Single-part message
+        if payload.get("mimeType") == "text/plain":
+            body_data = payload.get("body", {}).get("data")
+            if body_data:
+                try:
+                    return base64.urlsafe_b64decode(body_data).decode("utf-8", errors="replace")
+                except (binascii.Error, ValueError):
+                    return ""
+
+        # Multipart message - find text/plain part
+        for part in payload.get("parts", []):
+            if part.get("mimeType") == "text/plain":
+                body_data = part.get("body", {}).get("data")
+                if body_data:
+                    try:
+                        return base64.urlsafe_b64decode(body_data).decode("utf-8", errors="replace")
+                    except (binascii.Error, ValueError):
+                        continue
+            # Recurse into nested parts (e.g., multipart/alternative inside multipart/mixed)
+            if "parts" in part:
+                text = self._extract_body_text(part)
+                if text:
+                    return text
+
         return ""
 
     def _extract_attachments(self, payload: dict) -> list[EmailAttachment]:

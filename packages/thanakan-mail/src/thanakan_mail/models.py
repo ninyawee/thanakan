@@ -21,6 +21,7 @@ class EmailMessage(BaseModel):
     subject: str = ""
     sender: str = ""
     date: str = ""
+    body: str = ""
     attachments: list[EmailAttachment] = Field(default_factory=list)
 
 
