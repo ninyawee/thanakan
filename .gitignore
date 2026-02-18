@@ -15,3 +15,5 @@ site/
 # test
 desktop client.json
 mise.local.toml
+
+/downloads
