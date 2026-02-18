@@ -1,6 +1,14 @@
 [tools]
 python = "3.14.2"
 
+[tasks.api]
+description = "Run the statement API server (development)"
+run = "uv run --package thanakan-statement-api uvicorn thanakan_statement_api.main:app --reload --port 8000"
+
+[tasks."api:prod"]
+description = "Run the statement API server (production)"
+run = "uv run --package thanakan-statement-api uvicorn thanakan_statement_api.main:app --host 0.0.0.0 --port 8000"
+
 [tasks.pypi]
 description = "Publish all packages to PyPI"
 depends = ["pypi:libs", "pypi:main"]
