@@ -36,6 +36,8 @@ def detect_bank_type(text: str) -> str:
     Returns:
         Bank type: "scb", "bbl", or "kbank" (default)
     """
+    # Only the header: transaction lines name other banks ("SCB มณี SHOP", "โอนไป BBL")
+    text = re.split(r"^\d{2}[-/]\d{2}[-/]\d{2}\s", text, maxsplit=1, flags=re.MULTILINE)[0]
     if "SIAM COMMERCIAL" in text or "ไทยพาณิชย์" in text or "SCB" in text:
         return BANK_SCB
     if "Bangkok Bank" in text or "ธนาคารกรุงเทพ" in text or "Bualuang" in text:
